@@ -13,6 +13,7 @@
     2.6 Leader board: Display top x players by winning rate, level, number of games and custom score, and explain the same score processing rules.  
     2.7 Data Management: The administrator can add, delete and modify players, heroes, equipment, teams and game records; Players can only view public data and edit basic personal information.  
     2.8 Authentication: Realize administrator/player dual role login and logout, and strictly separate permissions to ensure data security.  
+
 ## 3. Java Concept Used
     3.1 Inheritance: player and admin inherit the abstract parent class person.  
     3.2 Encapsulation: all model class fields are set to private and can be accessed and modified through getter or setter.  
@@ -22,6 +23,7 @@
     3.6 Exception handling: capture input errors, ID does not exist, data duplication, file read-write exceptions, and friendly prompts.  
     3.7 File i/o: text/CSV read/write data, support system data saving and loading.  
     3.8 Enumeration: herotype (MAGE/Shooter/tank), matchresult (win/lose), equipmenttype (attack/defense/spell).  
+
 ## 4. Class Design
 ### 4.1 model
     4.1.1 Person (abstract class): attribute ID, name, password, role; Methods login(), logout(), getinfo(). 
@@ -31,6 +33,15 @@
     4.1.5 Equipment: attribute ID, name, type, usagecount, winratecontribution, compatibleheroes. 
     4.1.6 Team: attribute ID, name, playerlist, avgglevel, totalmatches, winrate, topplayer. 
     4.1.7 Matchrecord: attribute ID, date, playerid/teamid, opponent, result, pickedheroes. 
+### 4.2 service
+    4.2.1 GameDataManager
+    4.2.2 AuthenticationService
+    4.2.3 SearchService
+    4.2.4 RankingService
+    4.2.5 FileStorageService
+### 4.3 util
+    4.3.1 InputHelper
+    4.3.2 DataInitializa
 
 ## 5. UML Draft
     5.1 Abstract class person: subclasses player, admin (inheritance relationship) 
@@ -39,7 +50,6 @@
     5.4 Hero associated equipment: heroes can equip multiple equipment 
     5.5 Matchrecord associated player/team, Hero: record player/team, select hero and opponent 
     5.6 Interfaces: searchable (player, team, hero, equipment, matchrecord Implementation), persistent (all model class implementation), authenticatable (person Implementation) 
-
 
 ## 6. Data Design
     Initial data set
@@ -50,7 +60,15 @@
     Competition records: 10 entries, including players, teams, opponents, dates, winners and losers, and heroes.
     data storage: Hard coded initialization data at the initial stage of development; In the later stage, the text/CSV file is used for persistence, and the program starts loading and exits saving to ensure that the data is not lost.
 ## 7. AI Usage Plan
+    Use vscode (DeepSeek-coder-V2 16B) in the whole process to play three types of roles with clear division of labor:
+    Architect agent: responsible for overall project design, class structure, UML suggestions, module division, interface design, Java concept application scheme
+    Implementation agent: responsible for providing code fragments and implementation ideas
+    Testing/reviewer: responsible for designing test cases, reviewing code logic, finding bugs, optimizing exception handling, checking OOP specifications, and evaluating code quality
+
 ## 8. Prompt Strategy
+    Design class prompt: clear requirements, such as "design java OOP class structure based on IMS requirements of King glory, including inheritance, interface, set and enumeration, explain class responsibilities and relationships, and do not write complete code".
+    Implementation class prompt: precise limit, such as "only implement the player query method, handle ID/name search, null value, no player exceptions, and attach notes."
+    Debug/review prompt: focus on specific problems, such as "for a problem, locate the cause, explain the problem, give the minimum repair scheme, and do not modify irrelevant code."
 
 ## 9. Development Timeline
     Stage 1:Read requirements, create repository, write first plan.md.  
@@ -65,5 +83,7 @@
 ## 10. Testing Plan
     Test scope
     Cover all core functions: identity authentication, player query, team overview, hero details, equipment statistics, game records, leaderboards, data management, file persistence
+
 ## 11. Risk Analysis
+    
 ## 12. Final Reflection Placeholder
