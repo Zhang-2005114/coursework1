@@ -1,9 +1,11 @@
 # Agent Log
 ## 1. Architect Agent
 
-Main contribution:<br> 
+Main contribution:<br>
+Suggested the initial OOP structure.<br>
 
-Human Decision:<br> 
+Human Decision:<br>
+I accepted seven clasees in model and add multiple classes for service.<br>
 
 Related Commit:
 

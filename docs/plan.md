@@ -24,9 +24,23 @@
     3.8 Enumeration: herotype (MAGE/Shooter/tank), matchresult (win/lose), equipmenttype (attack/defense/spell).  
 ## 4. Class Design
 ### 4.1 model
- 
+    4.1.1 Person (abstract class): attribute ID, name, password, role; Methods login(), logout(), getinfo(). 
+    4.1.2 Player (subclass): inherit person; Attribute level, winrate, teamid, ownedheroes; Methods viewprofile(), editbasicinfo(). 
+    4.1.3 Admin (subclass): inherit person; Methods adddata(), deletedata(), editdata(), managerall(). 
+    4.1.4 Hero: attribute ID, name, type, basestats, compatibleequipments, ownerplayers. 
+    4.1.5 Equipment: attribute ID, name, type, usagecount, winratecontribution, compatibleheroes. 
+    4.1.6 Team: attribute ID, name, playerlist, avgglevel, totalmatches, winrate, topplayer. 
+    4.1.7 Matchrecord: attribute ID, date, playerid/teamid, opponent, result, pickedheroes. 
 
 ## 5. UML Draft
+    5.1 Abstract class person: subclasses player, admin (inheritance relationship) 
+    5.2 Player aggregate Hero: one player has multiple Heroes 
+    5.3 Team aggregation player: a team contains multiple players 
+    5.4 Hero associated equipment: heroes can equip multiple equipment 
+    5.5 Matchrecord associated player/team, Hero: record player/team, select hero and opponent 
+    5.6 Interfaces: searchable (player, team, hero, equipment, matchrecord Implementation), persistent (all model class implementation), authenticatable (person Implementation) 
+
+
 ## 6. Data Design
     Initial data set
     Team: 3 teams with at least 5 players in each team.
@@ -38,7 +52,7 @@
 ## 7. AI Usage Plan
 ## 8. Prompt Strategy
 
-## 9. Development Timeline\n
+## 9. Development Timeline
     Stage 1:Read requirements, create repository, write first plan.md.  
     Stage 2:AskArchitect Agentfordesignfeedback; revise class structure manually.  
     Stage 3:Implement model classes and initial data.  
