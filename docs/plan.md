@@ -34,14 +34,14 @@
     4.1.6 Team: attribute ID, name, playerlist, avgglevel, totalmatches, winrate, topplayer. 
     4.1.7 Matchrecord: attribute ID, date, playerid/teamid, opponent, result, pickedheroes. 
 ### 4.2 service
-    4.2.1 GameDataManager
-    4.2.2 AuthenticationService
-    4.2.3 SearchService
-    4.2.4 RankingService
-    4.2.5 FileStorageService
+    4.2.1 GameDataManager: Central data manager storing all players, heroes, equipment, teams, and match records; provides unified CRUD operations.
+    4.2.2 AuthenticationService: Handles user login, logout, role verification, and permission control for Admin and Player.
+    4.2.3 SearchService: Implements lookup functions for players, teams, heroes, equipment, and matches by ID or name.
+    4.2.4 RankingService: Calculates equipment statistics and generates player leaderboards by win rate, level, match count, and custom score.
+    4.2.5 FileStorageService: Supports data persistence by saving and loading system data to/from CSV or text files.
+    4.2.6 MatchHistoryService: Retrieves recent match records for players or teams and displays match results and hero picks.
 ### 4.3 util
-    4.3.1 InputHelper
-    4.3.2 DataInitializa
+
 
 ## 5. UML Draft
     5.1 Abstract class person: subclasses player, admin (inheritance relationship) 

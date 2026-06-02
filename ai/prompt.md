@@ -2,7 +2,7 @@
     Time: 2026/06/02   
     Tool/Model: VScode/DeepSeek-Coder-V2 16B    
     Agent Role: Architect Agent   
-    Related commit: 049f030
+    Related commit: 049f030 
 ### My Prompt
     I am doing my java OOP homework: King glory information management system. Please suggest class structure:   
     Person, Player, Admin, Hero, Equipment, Team, MatchRecord， And inheritance, interfaces, and collections.   
@@ -17,7 +17,7 @@
     Time: 2026/06/02
     Tool/Model: VScode/DeepSeek-Coder-V2 16B  
     Agent Role: Architect Agent
-    Related commit:   
+    Related commit: 8a69cc8 
 ### My Prompt
     I am doing my java OOP homework: King glory information management system. Please suggest class structure for service.   
     Only talk about design and responsibility, don't write complete code. 
