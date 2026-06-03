@@ -44,45 +44,72 @@
 
 
 ## 5. UML Draft
-    5.1 Abstract class person: subclasses player, admin (inheritance relationship) 
-    5.2 Player aggregate Hero: one player has multiple Heroes 
-    5.3 Team aggregation player: a team contains multiple players 
-    5.4 Hero associated equipment: heroes can equip multiple equipment 
-    5.5 Matchrecord associated player/team, Hero: record player/team, select hero and opponent 
-    5.6 Interfaces: searchable (player, team, hero, equipment, matchrecord Implementation), persistent (all model class implementation), authenticatable (person Implementation) 
+    Diagram: `docs/UML.png`. 
+
+    5.1 Person(abstract)  
+    Variables: `id`, `name`, `password`, `role`  
+    Methods: `login()`, `logout()`, `getInfo()`, `authenticate()`
+
+    5.2 Player 
+    Variables: `level`, `winRate`, `teamId`, `ownedHeroes`, `matchCount`  
+    Methods: `viewProfile()`, `editBasicInfo()`
+
+    5.3 Admin  
+    Variables: (none beyond `Person`)  
+    Methods: `manageAll()`, `addData()`, `deleteData()`, `editData()`
+
+    5.4 Hero   
+    Variables: `id`, `name`, `type`, `baseStats`, `compatibleEquipments`, `ownerPlayers`  
+    Methods: `getRecommendedEquipment()`
+
+    5.5 Equipment   
+    Variables: `id`, `name`, `type`, `usageCount`, `winRateContribution`, `compatibleHeroes`  
+    Methods: `getHeroUsageCount()`
+
+    5.6 Team  
+    Variables: `id`, `name`, `playerList`, `avgLevel`, `totalMatches`, `winRate`, `topPlayer`  
+    Methods: `recalculateStats()`
+
+    5.7 MatchRecord  
+    Variables: `id`, `date`, `playerId`, `teamId`, `opponent`, `result`, `pickedHeroes`  
+    Methods: `isWin()`, `getResultDisplay()`
+
+    5.8 Authenticatable (interface, used by `Person`): `login()`, `logout()`, `authenticate()`
 
 ## 6. Data Design
-    Initial data set
-    Team: 3 teams with at least 5 players in each team.
-    Players: 10, each with at least 3 heroes.
-    Hero: 15, each with at least 2 pieces of equipment.
-    Equipment: 20 pieces, including attack, defense and magic.
-    Competition records: 10 entries, including players, teams, opponents, dates, winners and losers, and heroes.
-    data storage: Hard coded initialization data at the initial stage of development; In the later stage, the text/CSV file is used for persistence, and the program starts loading and exits saving to ensure that the data is not lost.
+    Initial data set  
+    Teams: 3 teams, each with at least 5 players.  
+    Players: 10 players, each owning at least 3 heroes.  
+    Heroes: 15 heroes, each able to equip at least 2 items.  
+    Equipment: 20 items, including attack, defense, and spell types.  
+    Match records: 10 entries, covering players, teams, opponents, dates, results (win/lose), and heroes picked.  
+    Data storage: use hard-coded sample data during early development; later use text or CSV files via `FileStorageService` to load on startup and save on exit so data is not lost.
+
 ## 7. AI Usage Plan
-    Use vscode (DeepSeek-coder-V2 16B) in the whole process to play three types of roles with clear division of labor:
-    Architect agent: responsible for overall project design, class structure, UML suggestions, module division, interface design, Java concept application scheme
-    Implementation agent: responsible for providing code fragments and implementation ideas
-    Testing/reviewer: responsible for designing test cases, reviewing code logic, finding bugs, optimizing exception handling, checking OOP specifications, and evaluating code quality
+    Use VS Code (DeepSeek-Coder-V2 16B) throughout the project with three agent roles:  
+    Architect Agent: overall design, class structure, UML, module division, interface design, and how Java concepts are applied.  
+    Implementation Agent: code snippets and implementation ideas for selected tasks only.  
+    Testing/Reviewer Agent: test cases, code review, bug finding, exception handling, OOP checks, and quality feedback.  
+    Record all prompts and decisions in the `ai/` folder (`prompts.md`, `agent-log.md`, `reflection.md`).
 
 ## 8. Prompt Strategy
-    Design class prompt: clear requirements, such as "design java OOP class structure based on IMS requirements of King glory, including inheritance, interface, set and enumeration, explain class responsibilities and relationships, and do not write complete code".
-    Implementation class prompt: precise limit, such as "only implement the player query method, handle ID/name search, null value, no player exceptions, and attach notes."
-    Debug/review prompt: focus on specific problems, such as "for a problem, locate the cause, explain the problem, give the minimum repair scheme, and do not modify irrelevant code."
+    Design-class prompt: state requirements clearly, e.g. “Design the Java OOP structure for the Honor of Kings IMS (inheritance, interfaces, collections). Explain class responsibilities and relationships only; do not write full code.”  
+    Implementation prompt: limit scope precisely, e.g. “Implement only the player lookup method; support search by ID/name; handle null and missing player; add brief comments.”  
+    Debug/review prompt: target one issue, e.g. “This method fails when the hero is missing. Explain the cause and give a minimal fix without changing unrelated code.”
 
 ## 9. Development Timeline
-    Stage 1:Read requirements, create repository, write first plan.md.  
-    Stage 2:AskArchitect Agentfordesignfeedback; revise class structure manually.  
-    Stage 3:Implement model classes and initial data.  
-    Stage 4:Implement menu system and search features.  
-    Stage 5:Implement authentication and admin/player permissions.  
-    Stage 6:Implement persistence and ranking functions.  
-    Stage 7:Use Testing/Reviewer Agent to find bugs; fix and record decisions.  
-    Stage 8:Finish documentation, reflection, Git export, and final testing.  
+    Stage 1: Read requirements, create the repository, write the first `plan.md`.  
+    Stage 2: Use the Architect Agent for design feedback; revise the class structure manually.  
+    Stage 3: Implement model classes and initial sample data.  
+    Stage 4: Implement the menu system and search features.  
+    Stage 5: Implement authentication and Admin/Player permissions.  
+    Stage 6: Implement persistence and ranking features.  
+    Stage 7: Use the Testing/Reviewer Agent to find bugs; fix issues and record decisions.  
+    Stage 8: Complete documentation, reflection, Git export, and final testing.
 
 ## 10. Testing Plan
-    Test scope
-    Cover all core functions: identity authentication, player query, team overview, hero details, equipment statistics, game records, leaderboards, data management, file persistence
+    Test scope: cover all core functions in §2 — authentication, player lookup, team overview, hero details, equipment statistics, match history, leaderboards, data management, and file persistence.  
+    Document at least 10 test cases in `docs/test-cases.md` (test ID, function, input, expected output, actual output, pass/fail, bugs found).
 
 ## 11. Risk Analysis
     

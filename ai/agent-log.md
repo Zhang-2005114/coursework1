@@ -1,25 +1,28 @@
 # Agent Log
+
 ## 1. Architect Agent
-    Main contribution: Suggested the initial OOP structure.
-    Human Decision: I accepted seven clasees in model and sevice.
-        I add an extra class for service.
 
-    Related Commit:
-    - 049f030 Conceive the classes contained in the model and supplement the attributes and methods contained in these classes in the plan.md
-    - 8a69cc8 Conceive the classes contained in the service and the overview of the functions it needs to implement
+    Main contribution:  
+    Suggested the seven model classes (Person, Player, Admin, Hero, Equipment, Team, MatchRecord) with inheritance and associations; proposed five service classes mapped to plan.md features §2.1–2.8; advised use of interfaces, collections, and enums.
 
-## 2. Inplementation Agent
+    Human decision:  
+    Accepted the seven model classes and documented fields/methods in plan.md §4.1. Accepted five service classes and added **MatchHistoryService** for §2.5. Drew UML (`docs/uml.png`) and updated §5 with class variables and methods.
 
-Main contribution:
+    Related commits:  
+    - 049f030 — model class design in plan.md  
+    - 8a69cc8 — service class design in plan.md  
 
-Human Decision:
 
-Related Commit:
+## 2. Implementation Agent
 
-## 3. Testing Agent
+    Main contribution: 
+    Provided implementation guidance four enums (`src/enums/`), interfaces (`Searchable`, `Persistable`, `Authenticatable`), and full model code for Hero, Equipment, Team, MatchRecord per plan.md.
 
-Main contribution:
+    Human decision: 
+    Implemented classes manually in `src/model/` and `src/enums/`; extended "HeroType" with JUNGLER and SUPPORT; used `List<Integer>` for entity links; did not put Searchable/Persistable on model classes yet
 
-Human decision:
+    Related commits:
+    - 54af218 — enums  
 
-Related commits:
+## 3. Testing / Reviewer Agent
+
