@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Player extends Person {
+public class Player extends Person implements Searchable, Persistable {
     private int level;
     private double winRate;
     private int teamId;
@@ -125,5 +125,51 @@ public class Player extends Person {
         if (!ownedHeroes.contains(heroId)) {
             ownedHeroes.add(heroId);
         }
+    }
+
+    @Override
+    public boolean matches(String keyword) {
+        return CsvUtil.matchesIdOrName(getId(), getName(), keyword);
+    }
+
+    @Override
+    public String toCsvLine() {
+        return String.join("|",
+                String.valueOf(getId()),
+                getName(),
+                getPassword(),
+                getRole(),
+                String.valueOf(level),
+                String.valueOf(winRate),
+                String.valueOf(teamId),
+                String.valueOf(matchCount),
+                CsvUtil.joinInts(ownedHeroes, ";"),
+                CsvUtil.encodeEquipped(equippedItemsByHeroId));
+    }
+
+    public static Player fromCsvLine(String line) {
+        if (line == null || line.isBlank()) {
+            return null;
+        }
+        String[] parts = line.split("\\|", -1);
+        if (parts.length < 8) {
+            return null;
+        }
+        Player player = new Player(
+                Integer.parseInt(parts[0].trim()),
+                parts[1].trim(),
+                parts[2].trim(),
+                Integer.parseInt(parts[4].trim()),
+                Double.parseDouble(parts[5].trim()),
+                Integer.parseInt(parts[6].trim()),
+                Integer.parseInt(parts[7].trim()));
+        player.setRole(parts[3].trim());
+        if (parts.length > 8 && !parts[8].isBlank()) {
+            player.setOwnedHeroes(CsvUtil.parseIntList(parts[8], ";"));
+        }
+        if (parts.length > 9 && !parts[9].isBlank()) {
+            player.setEquippedItemsByHeroId(CsvUtil.decodeEquipped(parts[9]));
+        }
+        return player;
     }
 }

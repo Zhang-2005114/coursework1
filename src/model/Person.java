@@ -31,14 +31,17 @@ public abstract class Person implements Authenticatable{
 
     public void setRole(String role) { this.role = role; }
 
+    @Override
     public boolean authenticate(String inputPassword) {
         return this.password != null && this.password.equals(inputPassword);
     }
 
+    @Override
     public boolean login(String inputPassword){
         return authenticate(inputPassword);
     }
 
+    @Override
     public void logout() {
         System.out.println("User: " + this.name + " has logged out.");
     }

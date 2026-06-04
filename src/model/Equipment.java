@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Equipment {
+public class Equipment implements Searchable, Persistable {
     private int id;
     private String name;
     private EquipmentType type;
@@ -80,6 +80,42 @@ public class Equipment {
 
     public int getHeroUsageCount() {
         return compatibleHeroes.size();
+    }
+
+    @Override
+    public boolean matches(String keyword) {
+        return CsvUtil.matchesIdOrName(id, name, keyword);
+    }
+
+    @Override
+    public String toCsvLine() {
+        return String.join("|",
+                String.valueOf(id),
+                name != null ? name : "",
+                type != null ? type.name() : "",
+                String.valueOf(usageCount),
+                String.valueOf(winRateContribution),
+                CsvUtil.joinInts(compatibleHeroes, ";"));
+    }
+
+    public static Equipment fromCsvLine(String line) {
+        if (line == null || line.isBlank()) {
+            return null;
+        }
+        String[] parts = line.split("\\|", -1);
+        if (parts.length < 5) {
+            return null;
+        }
+        Equipment equipment = new Equipment(
+                Integer.parseInt(parts[0].trim()),
+                parts[1].trim(),
+                EquipmentType.fromString(parts[2].trim()),
+                Integer.parseInt(parts[3].trim()),
+                Double.parseDouble(parts[4].trim()));
+        if (parts.length > 5 && !parts[5].isBlank()) {
+            equipment.setCompatibleHeroes(CsvUtil.parseIntList(parts[5], ";"));
+        }
+        return equipment;
     }
 
     @Override

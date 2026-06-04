@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Team {
+public class Team implements Searchable, Persistable {
     private int id;
     private String name;
     private List<Integer> playerList;
@@ -131,6 +131,50 @@ public class Team {
         }
         totalMatches = matches;
         winRate = matches == 0 ? 0 : (double) wins / matches;
+    }
+
+    @Override
+    public boolean matches(String keyword) {
+        return CsvUtil.matchesIdOrName(id, name, keyword);
+    }
+
+    @Override
+    public String toCsvLine() {
+        return String.join("|",
+                String.valueOf(id),
+                name != null ? name : "",
+                CsvUtil.joinInts(playerList, ";"),
+                String.valueOf(avgLevel),
+                String.valueOf(totalMatches),
+                String.valueOf(winRate),
+                String.valueOf(topPlayer));
+    }
+
+    public static Team fromCsvLine(String line) {
+        if (line == null || line.isBlank()) {
+            return null;
+        }
+        String[] parts = line.split("\\|", -1);
+        if (parts.length < 2) {
+            return null;
+        }
+        Team team = new Team(Integer.parseInt(parts[0].trim()), parts[1].trim());
+        if (parts.length > 2 && !parts[2].isBlank()) {
+            team.setPlayerList(CsvUtil.parseIntList(parts[2], ";"));
+        }
+        if (parts.length > 3 && !parts[3].isBlank()) {
+            team.setAvgLevel(Double.parseDouble(parts[3].trim()));
+        }
+        if (parts.length > 4 && !parts[4].isBlank()) {
+            team.setTotalMatches(Integer.parseInt(parts[4].trim()));
+        }
+        if (parts.length > 5 && !parts[5].isBlank()) {
+            team.setWinRate(Double.parseDouble(parts[5].trim()));
+        }
+        if (parts.length > 6 && !parts[6].isBlank()) {
+            team.setTopPlayer(Integer.parseInt(parts[6].trim()));
+        }
+        return team;
     }
 
     @Override
