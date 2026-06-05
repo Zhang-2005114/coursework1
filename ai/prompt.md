@@ -73,4 +73,21 @@
     and matchesIdOrName for reuse across model toCsvLine/fromCsvLine and matches() methods.
 ### My Decision
     Added src/util/CsvUtil.java and wired it into model classes when implementing Searchable and Persistable;
-    
+
+## Prompt 06
+    Time: 2026/06/05
+    Tool/Model: VScode/DeepSeek-Coder-V2 16B  
+    Agent Role: Implementation Agent
+    Related commit: 
+### My Prompt
+    Implement DataInitializer.java in src/util/ for my Honor of Kings IMS. Load sample data into
+    GameDataManager per plan.md 6: 3 teams (≥5 players each), 15 players (≥3 heroes each), 15 heroes
+    (≥2 equipment each), 20 equipment, 10 match records, plus one admin account. Link ownerPlayers,
+    compatibleHeroes, and call Team.recalculateStats() after load. Provide createSampleData() and
+    loadSampleData(GameDataManager).
+### AI Response Summary
+    Suggested DataInitializer with ordered creation (equipment → heroes → players → teams → admin →
+    matches), bidirectional ID links, and team stat refresh after loading minimum dataset.
+### My Decision
+    Added src/util/DataInitializer.java; implemented GameDataManager storage first; used 15 players in
+    3 teams of 5;

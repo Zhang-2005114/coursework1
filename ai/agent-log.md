@@ -17,17 +17,21 @@
 ## 2. Implementation Agent
 
     Main contribution:  
-    Helped implement enums, model classes (Hero, Equipment, Team, MatchRecord), and utility class-CsvUtil for CSV encoding/decoding and shared search matching.
+    Helped implement enums, model classes, interfaces, CsvUtil, GameDataManager (CRUD/find), and
+    DataInitializer for the plan.md §6 minimum sample dataset.
 
     Human decision:  
-    Implemented code in `src/enums/`, `src/model/`, and `src/util/CsvUtil.java`. Extended HeroType with JUNGLER and SUPPORT. 
-    Used `List<Integer>` for links between entities. Applied Searchable and Persistable on Player, Hero, Equipment, Team, MatchRecord; Person implements Authenticatable. 
-    Used CsvUtil in `toCsvLine()`, `fromCsvLine()`, and `matches()` to avoid duplicate logic.
+    Implemented code in `src/enums/`, `src/interfaces/`, `src/model/`, `src/service/GameDataManager.java`,
+    and `src/util/` (CsvUtil, DataInitializer). Extended HeroType with JUNGLER and SUPPORT. Used
+    `List<Integer>` for entity links. `deleteHero` removes the hero from every player's `ownedHeroes` and
+    related references. DataInitializer loads 3 teams, 15 players, 15 heroes, 20 equipment, 10 matches,
+    and 1 admin; calls `recalculateStats()` after load.
 
     Related commits:
-    - 54af218 — enums 
-    - 77cb1c9 — Hero, Equipment, Team, MatchRecord  
-    - 444d6d5 — Add CsvUtil for interfaces
+    - 54af218 — enums
+    - 77cb1c9 — Hero, Equipment, Team, MatchRecord
+    - 444d6d5 — CsvUtil.java
+    - 
 
 ## 3. Testing / Reviewer Agent
 
