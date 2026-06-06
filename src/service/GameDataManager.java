@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -8,10 +9,14 @@ public class GameDataManager {
     private final Map<Integer, Hero> heroes = new HashMap<>();
     private final Map<Integer, Equipment> equipments = new HashMap<>();
     private final Map<Integer, Team> teams = new HashMap<>();
-    private final Map<Integer, MatchRecord> matches = new HashMap<>();
+    private final List<MatchRecord> matchRecords = new ArrayList<>();
     private final Map<Integer, Admin> admins = new HashMap<>();
 
-    //  Player
+    public void initializeSampleData() {
+        DataInitializer.loadSampleData(this);
+    }
+
+    // --- Player ---
 
     public void addPlayer(Player player) {
         if (player != null) {
@@ -19,7 +24,7 @@ public class GameDataManager {
         }
     }
 
-    public boolean deletePlayer(int id) {
+    public boolean removePlayer(int id) {
         Player removed = players.remove(id);
         if (removed == null) {
             return false;
@@ -30,19 +35,23 @@ public class GameDataManager {
         for (Hero hero : heroes.values()) {
             hero.getOwnerPlayers().remove(Integer.valueOf(id));
         }
-        matches.entrySet().removeIf(e -> e.getValue().getPlayerId() == id);
+        matchRecords.removeIf(record -> record.getPlayerId() == id);
         return true;
     }
 
-    public Player findPlayerById(int id) {
+    public boolean updatePlayer(Player player) {
+        if (player == null || !players.containsKey(player.getId())) {
+            return false;
+        }
+        players.put(player.getId(), player);
+        return true;
+    }
+
+    public Player getPlayerById(int id) {
         return players.get(id);
     }
 
-    public Player findPlayerByName(String name) {
-        return findByName(players, name);
-    }
-
-    //  Hero
+    // --- Hero ---
 
     public void addHero(Hero hero) {
         if (hero != null) {
@@ -50,7 +59,7 @@ public class GameDataManager {
         }
     }
 
-    public boolean deleteHero(int id) {
+    public boolean removeHero(int id) {
         if (!heroes.containsKey(id)) {
             return false;
         }
@@ -61,22 +70,26 @@ public class GameDataManager {
         for (Equipment equipment : equipments.values()) {
             equipment.getCompatibleHeroes().remove(Integer.valueOf(id));
         }
-        for (MatchRecord record : matches.values()) {
+        for (MatchRecord record : matchRecords) {
             record.getPickedHeroes().remove(Integer.valueOf(id));
         }
         heroes.remove(id);
         return true;
     }
 
-    public Hero findHeroById(int id) {
+    public boolean updateHero(Hero hero) {
+        if (hero == null || !heroes.containsKey(hero.getId())) {
+            return false;
+        }
+        heroes.put(hero.getId(), hero);
+        return true;
+    }
+
+    public Hero getHeroById(int id) {
         return heroes.get(id);
     }
 
-    public Hero findHeroByName(String name) {
-        return findByName(heroes, name);
-    }
-
-    // Equipment
+    // --- Equipment ---
 
     public void addEquipment(Equipment equipment) {
         if (equipment != null) {
@@ -84,7 +97,7 @@ public class GameDataManager {
         }
     }
 
-    public boolean deleteEquipment(int id) {
+    public boolean removeEquipment(int id) {
         if (!equipments.containsKey(id)) {
             return false;
         }
@@ -100,15 +113,19 @@ public class GameDataManager {
         return true;
     }
 
-    public Equipment findEquipmentById(int id) {
+    public boolean updateEquipment(Equipment equipment) {
+        if (equipment == null || !equipments.containsKey(equipment.getId())) {
+            return false;
+        }
+        equipments.put(equipment.getId(), equipment);
+        return true;
+    }
+
+    public Equipment getEquipmentById(int id) {
         return equipments.get(id);
     }
 
-    public Equipment findEquipmentByName(String name) {
-        return findByName(equipments, name);
-    }
-
-    // Team
+    // --- Team ---
 
     public void addTeam(Team team) {
         if (team != null) {
@@ -116,7 +133,7 @@ public class GameDataManager {
         }
     }
 
-    public boolean deleteTeam(int id) {
+    public boolean removeTeam(int id) {
         Team removed = teams.remove(id);
         if (removed == null) {
             return false;
@@ -126,35 +143,64 @@ public class GameDataManager {
                 player.setTeamId(0);
             }
         }
-        matches.entrySet().removeIf(e -> e.getValue().getTeamId() == id);
+        matchRecords.removeIf(record -> record.getTeamId() == id);
         return true;
     }
 
-    public Team findTeamById(int id) {
+    public boolean updateTeam(Team team) {
+        if (team == null || !teams.containsKey(team.getId())) {
+            return false;
+        }
+        teams.put(team.getId(), team);
+        return true;
+    }
+
+    public Team getTeamById(int id) {
         return teams.get(id);
     }
 
-    public Team findTeamByName(String name) {
-        return findByName(teams, name);
-    }
+    // --- MatchRecord ---
 
-    //  Match
-
-    public void addMatch(MatchRecord record) {
+    public void addMatchRecord(MatchRecord record) {
         if (record != null) {
-            matches.put(record.getId(), record);
+            matchRecords.add(record);
         }
     }
 
-    public boolean deleteMatch(int id) {
-        return matches.remove(id) != null;
+    public boolean removeMatchRecord(int id) {
+        Iterator<MatchRecord> iterator = matchRecords.iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().getId() == id) {
+                iterator.remove();
+                return true;
+            }
+        }
+        return false;
     }
 
-    public MatchRecord findMatchById(int id) {
-        return matches.get(id);
+    public boolean updateMatchRecord(MatchRecord record) {
+        if (record == null) {
+            return false;
+        }
+        for (int i = 0; i < matchRecords.size(); i++) {
+            if (matchRecords.get(i).getId() == record.getId()) {
+                matchRecords.set(i, record);
+                return true;
+            }
+        }
+        return false;
     }
 
-    //  Admin
+    public MatchRecord getMatchRecordById(int id) {
+        for (MatchRecord record : matchRecords) {
+            if (record.getId() == id) {
+                return record;
+            }
+        }
+        return null;
+    }
+
+    // --- Admin (login / sample data) ---
 
     public void addAdmin(Admin admin) {
         if (admin != null) {
@@ -162,11 +208,11 @@ public class GameDataManager {
         }
     }
 
-    public Admin findAdminById(int id) {
+    public Admin getAdminById(int id) {
         return admins.get(id);
     }
 
-    //  Bulk access
+    // --- Bulk access ---
 
     public List<Player> getAllPlayers() {
         return new ArrayList<>(players.values());
@@ -184,47 +230,11 @@ public class GameDataManager {
         return new ArrayList<>(teams.values());
     }
 
-    public List<MatchRecord> getAllMatches() {
-        return new ArrayList<>(matches.values());
-    }
-
-    public void addMatchRecord(MatchRecord record) {
-        addMatch(record);
-    }
-
     public List<MatchRecord> getAllMatchRecords() {
-        return getAllMatches();
+        return new ArrayList<>(matchRecords);
     }
 
     public List<Player> getPlayersAsList() {
         return getAllPlayers();
-    }
-
-    public Player getPlayer(int id) {
-        return findPlayerById(id);
-    }
-
-    public Hero getHero(int id) {
-        return findHeroById(id);
-    }
-
-    public Equipment getEquipment(int id) {
-        return findEquipmentById(id);
-    }
-
-    public Team getTeam(int id) {
-        return findTeamById(id);
-    }
-
-    private static <T extends Searchable> T findByName(Map<Integer, T> map, String keyword) {
-        if (keyword == null || keyword.isBlank()) {
-            return null;
-        }
-        for (T item : map.values()) {
-            if (item.matches(keyword)) {
-                return item;
-            }
-        }
-        return null;
     }
 }

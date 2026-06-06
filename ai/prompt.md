@@ -78,7 +78,7 @@
     Time: 2026/06/05
     Tool/Model: VScode/DeepSeek-Coder-V2 16B  
     Agent Role: Implementation Agent
-    Related commit: 
+    Related commit: 1ef21fa
 ### My Prompt
     Implement DataInitializer.java in src/util/ for my Honor of Kings IMS. Load sample data into
     GameDataManager per plan.md 6: 3 teams (≥5 players each), 15 players (≥3 heroes each), 15 heroes

@@ -28,10 +28,10 @@
     and 1 admin; calls `recalculateStats()` after load.
 
     Related commits:
-    - 54af218 — enums
-    - 77cb1c9 — Hero, Equipment, Team, MatchRecord
-    - 444d6d5 — CsvUtil.java
-    - 
+    - 54af218 — Inplement enums
+    - 77cb1c9 — Complete the remaining classes in the model and do not implement the interface temporarily
+    - 444d6d5 — Add CsvUtil for interfaces
+    - 1ef21fa — Add DataInitializer sample data
 
 ## 3. Testing / Reviewer Agent
 

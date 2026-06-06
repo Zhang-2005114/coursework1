@@ -6,6 +6,10 @@ public final class DataInitializer {
     private DataInitializer() {
     }
 
+    public static GameDataManager createDefault() {
+        return createSampleData();
+    }
+
     public static GameDataManager createSampleData() {
         GameDataManager manager = new GameDataManager();
         loadSampleData(manager);
@@ -92,7 +96,7 @@ public final class DataInitializer {
             for (int h = 0; h < 3; h++) {
                 int heroId = (i * 3 + h) % 15 + 1;
                 player.addOwnedHero(heroId);
-                Hero hero = manager.findHeroById(heroId);
+                Hero hero = manager.getHeroById(heroId);
                 if (hero != null) {
                     List<Integer> equipped = new ArrayList<>(hero.getCompatibleEquipments());
                     if (!equipped.isEmpty()) {
@@ -132,7 +136,7 @@ public final class DataInitializer {
 
         for (int i = 0; i < 10; i++) {
             int playerId = (i % 15) + 1;
-            Player player = manager.findPlayerById(playerId);
+            Player player = manager.getPlayerById(playerId);
             int teamId = player != null ? player.getTeamId() : 1;
             List<Integer> picks = new ArrayList<>();
             if (player != null && !player.getOwnedHeroes().isEmpty()) {
@@ -158,7 +162,7 @@ public final class DataInitializer {
     private static void linkHeroOwners(GameDataManager manager) {
         for (Player player : manager.getAllPlayers()) {
             for (Integer heroId : player.getOwnedHeroes()) {
-                Hero hero = manager.findHeroById(heroId);
+                Hero hero = manager.getHeroById(heroId);
                 if (hero != null) {
                     hero.addOwnerPlayer(player.getId());
                 }
@@ -167,7 +171,7 @@ public final class DataInitializer {
     }
 
     private static void linkEquipmentToHero(GameDataManager manager, int heroId, int equipmentId) {
-        Equipment equipment = manager.findEquipmentById(equipmentId);
+        Equipment equipment = manager.getEquipmentById(equipmentId);
         if (equipment != null) {
             equipment.addCompatibleHero(heroId);
         }
