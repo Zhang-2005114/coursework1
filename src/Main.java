@@ -16,6 +16,12 @@ public class Main {
                 case 1:
                     handlePlayerLookup();
                     break;
+                case 2:
+                    handleTeamOverview();
+                    break;
+                case 3:
+                    handleHeroDetails();
+                    break;
                 case 0:
                     System.out.println("Goodbye.");
                     return;
@@ -53,5 +59,36 @@ public class Main {
         }
         
         searchService.displayPlayerDetails(player);
+    }
+
+    private static void handleTeamOverview() {
+        System.out.println("\n=== Team Overview ===");
+        System.out.println("1 Search by ID");
+        System.out.println("2 Search by Name");
+        int subChoice = InputHelper.readInt("Select search method: ");
+        
+        Team team = null;
+        switch (subChoice) {
+            case 1:
+                int id = InputHelper.readInt("Enter team ID: ");
+                team = searchService.findTeamById(id);
+                break;
+            case 2:
+                String name = InputHelper.readString("Enter team name: ");
+                team = searchService.findTeamByName(name);
+                break;
+            default:
+                System.out.println("Invalid choice.");
+                return;
+        }
+        
+        searchService.displayTeamOverview(team);
+    }
+
+    private static void handleHeroDetails() {
+        System.out.println("\n=== Hero Details ===");
+        String name = InputHelper.readString("Enter hero name: ");
+        Hero hero = searchService.findHeroByName(name);
+        searchService.displayHeroDetails(hero);
     }
 }
