@@ -109,7 +109,7 @@
     related entities from GameDataManager.
 
 ## Prompt 08
-    Time: 2026/06/06
+    Time: 2026/06/07
     Tool/Model: VScode/DeepSeek-Coder-V2 16B
     Agent Role: Implementation Agent
     Related commit: f7362c3
@@ -125,3 +125,19 @@
     with variable substitution and simple +/* evaluation; explainTieBreaking() documents rules and formulas.
 ### My Decision
     Accepted RankingService.java as implemented.
+
+## Prompt 09
+    Time: 2026/06/07
+    Tool/Model: VScode/DeepSeek-Coder-V2 16B
+    Agent Role: Implementation Agent
+    Related commit: e83728b
+### My Prompt
+    Complete MatchHistoryService. Methods: getRecentMatchesForPlayer(playerId, n),
+    getRecentMatchesForTeam(teamId, n), displayMatchHistory(matches), calculateWinLossRecord(...),
+    calculateHeroPickRate(...).
+### AI Response Summary
+    Implemented MatchHistoryService with GameDataManager injection; recent matches filtered and sorted by date
+    descending; displayMatchHistory shows date, opponent, result, heroes, sample win rate, and hero pick rates;
+    WinLossRecord inner class for W/L stats; calculateHeroPickRate returns heroId-to-percentage map;
+### My Decision
+    Accepted MatchHistoryService.

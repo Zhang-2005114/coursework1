@@ -76,6 +76,14 @@ public class RankingService {
         return DEFAULT_EQUIPMENT_FORMULA;
     }
 
+    public String getDefaultPlayerFormula() {
+        return DEFAULT_PLAYER_FORMULA;
+    }
+
+    public double calculatePlayerScore(Player player) {
+        return evaluatePlayerScore(player, DEFAULT_PLAYER_FORMULA);
+    }
+
     public double calculateEquipmentScore(Equipment equipment, String formula) {
         String effectiveFormula =
                 formula == null || formula.isBlank() ? DEFAULT_EQUIPMENT_FORMULA : formula.trim();

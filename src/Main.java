@@ -3,11 +3,13 @@ import java.util.List;
 public class Main {
     private static SearchService searchService;
     private static RankingService rankingService;
+    private static MatchHistoryService matchHistoryService;
 
     public static void main(String[] args) {
         GameDataManager data = DataInitializer.createDefault();
         searchService = new SearchService(data);
         rankingService = new RankingService(data);
+        matchHistoryService = new MatchHistoryService(data);
         run(data);
     }
 
@@ -29,6 +31,12 @@ public class Main {
                 case 4:
                     handleEquipmentStatistics();
                     break;
+                case 5:
+                    handleMatchHistory();
+                    break;
+                case 6:
+                    handleLeaderboard();
+                    break;
                 case 0:
                     System.out.println("Goodbye.");
                     return;
@@ -44,6 +52,7 @@ public class Main {
         System.out.println("6 Leaderboard  7 Data Management  8 Login  9 Save  10 Load  0 Exit");
     }
 
+    //--1 Player Lookup--
     private static void handlePlayerLookup() {
         System.out.println("\n=== Player Lookup ===");
         System.out.println("1 Search by ID");
@@ -68,6 +77,7 @@ public class Main {
         searchService.displayPlayerDetails(player);
     }
 
+    //-- 2 Team Overview --
     private static void handleTeamOverview() {
         System.out.println("\n=== Team Overview ===");
         System.out.println("1 Search by ID");
@@ -92,6 +102,7 @@ public class Main {
         searchService.displayTeamOverview(team);
     }
 
+    //--3 Hero Details--
     private static void handleHeroDetails() {
         System.out.println("\n=== Hero Details ===");
         String name = InputHelper.readString("Enter hero name: ");
@@ -99,6 +110,7 @@ public class Main {
         searchService.displayHeroDetails(hero);
     }
 
+    //--4 Equipment Statistics--
     private static void handleEquipmentStatistics() {
         System.out.println("\n=== Equipment Statistics ===");
         System.out.println("1 Sort by usage count");
@@ -175,6 +187,149 @@ public class Main {
                         equipment.getUsageCount(),
                         equipment.getWinRateContribution(),
                         equipment.getHeroUsageCount());
+            }
+        }
+        System.out.println();
+    }
+
+    //--5 Match History--
+    private static void handleMatchHistory() {
+        System.out.println("\n=== Match History ===");
+        System.out.println("1 Query by player");
+        System.out.println("2 Query by team");
+        int subChoice = InputHelper.readInt("Select query type: ");
+        int n = InputHelper.readInt("How many recent games (n): ");
+
+        switch (subChoice) {
+            case 1:
+                System.out.println("1 Search player by ID");
+                System.out.println("2 Search player by name");
+                int playerChoice = InputHelper.readInt("Select: ");
+                Player player = null;
+                if (playerChoice == 1) {
+                    player = searchService.findPlayerById(InputHelper.readInt("Enter player ID: "));
+                } else if (playerChoice == 2) {
+                    player = searchService.findPlayerByName(InputHelper.readString("Enter player name: "));
+                } else {
+                    System.out.println("Invalid choice.");
+                    return;
+                }
+                if (player == null) {
+                    System.out.println("Player not found.");
+                    return;
+                }
+                List<MatchRecord> playerMatches =
+                        matchHistoryService.getRecentMatchesForPlayer(player.getId(), n);
+                printMatchHistorySubject("Player: " + player.getName(), n, playerMatches.size());
+                matchHistoryService.displayMatchHistory(playerMatches);
+                break;
+            case 2:
+                System.out.println("1 Search team by ID");
+                System.out.println("2 Search team by name");
+                int teamChoice = InputHelper.readInt("Select: ");
+                Team team = null;
+                if (teamChoice == 1) {
+                    team = searchService.findTeamById(InputHelper.readInt("Enter team ID: "));
+                } else if (teamChoice == 2) {
+                    team = searchService.findTeamByName(InputHelper.readString("Enter team name: "));
+                } else {
+                    System.out.println("Invalid choice.");
+                    return;
+                }
+                if (team == null) {
+                    System.out.println("Team not found.");
+                    return;
+                }
+                List<MatchRecord> teamMatches =
+                        matchHistoryService.getRecentMatchesForTeam(team.getId(), n);
+                printMatchHistorySubject("Team: " + team.getName(), n, teamMatches.size());
+                matchHistoryService.displayMatchHistory(teamMatches);
+                break;
+            default:
+                System.out.println("Invalid choice.");
+        }
+    }
+
+    private static void printMatchHistorySubject(String subject, int requested, int found) {
+        System.out.println();
+        System.out.println("--- " + subject + " ---");
+        if (found < requested) {
+            System.out.println("Note: only " + found + " match(es) on record (requested " + requested + ").");
+        }
+    }
+
+    //-- 6 Leaderboard--
+    private static void handleLeaderboard() {
+        System.out.println("\n=== Leaderboard ===");
+        System.out.println("1 Top by win rate");
+        System.out.println("2 Top by level");
+        System.out.println("3 Top by match count");
+        System.out.println("4 Top by custom score");
+        System.out.println("5 Explain tie-breaking rules");
+        int subChoice = InputHelper.readInt("Select: ");
+
+        if (subChoice == 5) {
+            rankingService.explainTieBreaking();
+            return;
+        }
+
+        int x = InputHelper.readInt("Show top how many players (x): ");
+        List<Player> top;
+        String label;
+        boolean showCustomScore = false;
+        switch (subChoice) {
+            case 1:
+                top = rankingService.getTopPlayersByWinRate(x);
+                label = "Win rate";
+                break;
+            case 2:
+                top = rankingService.getTopPlayersByLevel(x);
+                label = "Level";
+                break;
+            case 3:
+                top = rankingService.getTopPlayersByMatchCount(x);
+                label = "Match count";
+                break;
+            case 4:
+                top = rankingService.getTopPlayersByCustomScore(x);
+                label = "Custom score";
+                showCustomScore = true;
+                rankingService.explainTieBreaking();
+                break;
+            default:
+                System.out.println("Invalid choice.");
+                return;
+        }
+
+        printPlayerLeaderboard(top, label, showCustomScore);
+    }
+
+
+    private static void printPlayerLeaderboard(List<Player> players, String label, boolean showCustomScore) {
+        System.out.println("\n--- Top players by " + label + " ---");
+        if (players.isEmpty()) {
+            System.out.println("No players found.");
+            return;
+        }
+        int rank = 1;
+        for (Player player : players) {
+            if (showCustomScore) {
+                System.out.printf("%d. %s (ID: %d) | Score: %.2f | Level: %d | Win rate: %.2f%% | Matches: %d%n",
+                        rank++,
+                        player.getName(),
+                        player.getId(),
+                        rankingService.calculatePlayerScore(player),
+                        player.getLevel(),
+                        player.getWinRate() * 100,
+                        player.getMatchCount());
+            } else {
+                System.out.printf("%d. %s (ID: %d) | Level: %d | Win rate: %.2f%% | Matches: %d%n",
+                        rank++,
+                        player.getName(),
+                        player.getId(),
+                        player.getLevel(),
+                        player.getWinRate() * 100,
+                        player.getMatchCount());
             }
         }
         System.out.println();
