@@ -72,6 +72,27 @@ public class RankingService {
         return ranked.subList(0, Math.min(x, ranked.size()));
     }
 
+    public String getDefaultEquipmentFormula() {
+        return DEFAULT_EQUIPMENT_FORMULA;
+    }
+
+    public double calculateEquipmentScore(Equipment equipment, String formula) {
+        String effectiveFormula =
+                formula == null || formula.isBlank() ? DEFAULT_EQUIPMENT_FORMULA : formula.trim();
+        return evaluateEquipmentScore(equipment, effectiveFormula);
+    }
+
+    public void explainEquipmentSorting() {
+        System.out.println("=== Equipment Sorting Formulas ===");
+        System.out.println("1. Usage count: rank by usageCount (descending).");
+        System.out.println("2. Win rate contribution: rank by winRateContribution (descending).");
+        System.out.println("3. Hero count: rank by compatible hero count (descending).");
+        System.out.println("4. Custom score: " + DEFAULT_EQUIPMENT_FORMULA);
+        System.out.println("   usage = usageCount, winRate = winRateContribution, heroCount = compatible heroes.");
+        System.out.println("Tie-break (all sorts): lower equipment ID ranks higher.");
+        System.out.println();
+    }
+
     public void explainTieBreaking() {
         System.out.println("=== Tie-Breaking Rules ===");
         System.out.println("Equipment: same score -> lower equipment ID ranks higher.");
