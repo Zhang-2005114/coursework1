@@ -91,3 +91,37 @@
 ### My Decision
     Added src/util/DataInitializer.java; implemented GameDataManager storage first; used 15 players in
     3 teams of 5;
+
+## Prompt 07
+    Time: 2026/06/06
+    Tool/Model: VScode/DeepSeek-Coder-V2 16B  
+    Agent Role: Implementation Agent
+    Related commit: 1bb5f30
+### My Prompt
+    Implement SearchService.java in src/service/ for my Honor of Kings IMS. Follow plan.md 4.2.3:
+    findPlayerById, findPlayerByName, displayPlayerDetails (show team, level, win rate, heroes, equipment),
+    findTeamById, findTeamByName, displayTeamOverview, findHeroByName, displayHeroDetails.
+### AI Response Summary
+    Suggested SearchService with constructor injection of GameDataManager; all required methods with
+    proper null handling and formatted display output.
+### My Decision
+    Implemented SearchService.java with all 8 methods; display methods show comprehensive details including
+    related entities from GameDataManager.
+
+## Prompt 08
+    Time: 2026/06/06
+    Tool/Model: VScode/DeepSeek-Coder-V2 16B
+    Agent Role: Implementation Agent
+    Related commit: f7362c3
+### My Prompt
+    Implement RankingService: equipment statistics and player leaderboards.
+    Methods: rankEquipmentByUsage, rankEquipmentByWinRateContribution, rankEquipmentByHeroCount,
+    rankEquipmentByCustomScore(formula), getTopPlayersByWinRate/Level/MatchCount/CustomScore(x),
+    explainTieBreaking. May use TreeMap internally for sorting.
+### AI Response Summary
+    Implemented RankingService with GameDataManager injection; equipment rankings grouped by score in
+    reverse-order TreeMap with ID tie-break; player top-X via Comparator chains; custom score formulas
+    (default equipment: usage*0.5+winRate*100+heroCount*2; default player: level*0.4+winRate*100+matchCount*0.1)
+    with variable substitution and simple +/* evaluation; explainTieBreaking() documents rules and formulas.
+### My Decision
+    Accepted RankingService.java as implemented.
