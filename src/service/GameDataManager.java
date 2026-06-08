@@ -212,6 +212,10 @@ public class GameDataManager {
         return admins.get(id);
     }
 
+    public List<Admin> getAllAdmins() {
+        return new ArrayList<>(admins.values());
+    }
+
     // --- Bulk access ---
 
     public List<Player> getAllPlayers() {
