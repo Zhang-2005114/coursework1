@@ -19,7 +19,7 @@
     2.1 Main contribution:  
     Helped implement enums, model classes, interfaces, CsvUtil, GameDataManager (CRUD/find),
     DataInitializer for minimum sample dataset, SearchService,
-    RankingService and MatchHistoryService
+    RankingService, MatchHistoryService, AuthenticationService, and Main menu 7–8 (data management + login)
 
     2.2 Human decision:  
     2.2.1 Implemented code in `src/enums/`, `src/interfaces/`, `src/model/`, `src/service/GameDataManager.java`,
@@ -33,6 +33,9 @@
         explainTieBreaking() documents default formulas and same-score rules; Main menu 4 wired.
     2.2.5 MatchHistoryService: getRecentMatchesForPlayer/Team, displayMatchHistory, calculateWinLossRecord,
         calculateHeroPickRate; WinLossRecord inner class.
+    2.2.6 Main menu 7–8: handleDataManagement — admin add/delete/edit for all entities via GameDataManager,
+        player editBasicInfo only; handleLogin — login by ID/username and logout; session status in printMenu;
+        refreshAllTeamStats() after data changes.
 
     2.3 Related commits:
     - 54af218 — Inplement enums
@@ -41,4 +44,5 @@
     - 1ef21fa — Add DataInitializer sample data
     - 1bb5f30 — Implement SearchService.java
     - f7362c3 — Implement RankingService.java
-    - e83728b — Implement MatchHistoryService.java 
+    - e83728b — Implement MatchHistoryService.java
+    - pending — Main menu 7 Data Management and 8 Login/Logout

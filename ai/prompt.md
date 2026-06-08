@@ -141,3 +141,20 @@
     WinLossRecord inner class for W/L stats; calculateHeroPickRate returns heroId-to-percentage map;
 ### My Decision
     Accepted MatchHistoryService.
+
+## Prompt 10
+    Time: 2026/06/08
+    Tool/Model: VScode/DeepSeek-Coder-V2 16B
+    Agent Role: Implementation Agent
+    Related commit: pending
+### My Prompt
+    Wire Main.java menu 7 (Data Management) and 8 (Login/Logout). Admin: add/delete/edit Player, Hero,
+    Equipment, Team, MatchRecord via GameDataManager; Player: edit basic profile only. Use
+    AuthenticationService.requireAdmin() and show session on main menu.
+### AI Response Summary
+    Added handleLogin (login by ID or username, logout when already logged in); handleDataManagement with
+    admin submenu (add/delete/edit per entity) and player editBasicInfo; refreshAllTeamStats() after
+    player/team/match changes; printMenu shows current session; wired static authService and dataManager.
+### My Decision
+    Accepted Main.java menu 7 and 8; test flow: login admin/admin123 → menu 7 for CRUD; login Tom/player1 →
+    menu 7 for profile edit only.
