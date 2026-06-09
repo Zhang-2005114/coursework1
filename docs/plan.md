@@ -118,7 +118,9 @@
     6.6 Admin account
         One default admin ("admin" / "admin123") for testing login.
     6.7 Data storage
-        Hard-coded sample data via "DataInitializer" during early development; later persist through "FileStorageService" on startup and exit.
+        Sample data via DataInitializer on first run; FileStorageService persists to data/save.dat on menu 9,
+        menu 0 exit, and auto-load on startup when the file exists. Section-based text format with CSV lines
+        per entity ([PLAYERS], [HEROES], [EQUIPMENT], [TEAMS], [MATCHES], [ADMINS]).
 
 ## 7. AI Usage Plan
     7.1 Tool
@@ -141,28 +143,84 @@
         Target one issue; explain cause and give a minimal fix without changing unrelated code.
 
 ## 9. Development Timeline
-    9.1 Stage 1
+    9.1 Stage 1 — Done
         Read requirements, create the repository, write the first "plan.md".
-    9.2 Stage 2
+    9.2 Stage 2 — Done
         Use the Architect Agent for design feedback; revise the class structure manually.
-    9.3 Stage 3
+    9.3 Stage 3 — Done
         Implement model classes, enums, interfaces, util classes, and initial sample data.
-    9.4 Stage 4
-        Implement the menu system and search features.
-    9.5 Stage 5
-        Implement authentication and Admin/Player permissions.
-    9.6 Stage 6
-        Implement persistence and ranking features.
-    9.7 Stage 7
-        Use the Testing/Reviewer Agent to find bugs; fix issues and record decisions.
-    9.8 Stage 8
-        Complete documentation, reflection, Git export, and final testing.
+    9.4 Stage 4 — Done
+        Implement the menu system and search features (Main menu 1–3, SearchService).
+    9.5 Stage 5 — Done
+        Implement authentication and Admin/Player permissions (AuthenticationService, Main menu 7–8).
+    9.6 Stage 6 — Done
+        Implement persistence and ranking features (RankingService, MatchHistoryService, FileStorageService,
+        Main menu 4–6, 9–10).
+    9.7 Stage 7 — Done
+        Testing/Reviewer Agent: manual tests in docs/test-class.md (Test 01–10); fixed CsvUtil.parseIntList
+        delimiter bug found during save/load review (commit c26ea89).
+    9.8 Stage 8 — In progress
+        Complete README, ai/reflection.md, final Git export, and demo preparation.
 
 ## 10. Testing Plan
     10.1 Test scope
-        Cover all core functions in §2: authentication, player lookup, team overview, hero details, equipment statistics, match history, leaderboards, data management, and file persistence.
-   
+        Cover all core functions in §2: authentication, player lookup, team overview, hero details,
+        equipment statistics, match history, leaderboards, data management, and file persistence.
+    10.2 Test method
+        Manual console testing (no JUnit); record input, expected output, actual output, and pass/fail in
+        docs/test-class.md. Run: compile all src/*.java, java -cp out Main, follow each Test input sequence.
+    10.3 Test cases (docs/test-class.md)
+        Test 01 — menu 1, player lookup by name (Tom)
+        Test 02 — menu 2, team overview (Team1)
+        Test 03 — menu 3, hero details (Li Bai)
+        Test 04 — menu 4, equipment ranking by usage
+        Test 05 — menu 5, match history for player (Tom, n=3)
+        Test 06 — menu 6, top-3 players by win rate
+        Test 07 — menu 7, admin edit player (admin/admin123)
+        Test 08 — menu 8, login and logout
+        Test 09 — menu 9, save to data/save.dat
+        Test 10 — menu 10, load and verify persisted data (including equipped items)
+    10.4 Result summary
+        All Test 01–10 marked Pass after CsvUtil fix. Known non-blocking behaviour: menu 10 load resets
+        login session via rebindServices().
+
 ## 11. Risk Analysis
-   
-## 12. Final Reflection Placeholder
-   
+    11.1 ID collision (Admin vs Player)
+        Admin and Player 1 share ID 1; login by ID always matches Admin first. Mitigation: use username
+        login for players; consider separate admin ID in future data design.
+    11.2 Cascade delete side effects
+        removePlayer/removeTeam delete related MatchRecords entirely; team stats are refreshed in Main but
+        not inside GameDataManager. Mitigation: document behaviour; optional refactor to soft-delete records
+        and central refreshTeamStats in GameDataManager.
+    11.3 File persistence format
+        Pipe-delimited CSV in a single save.dat file; manual edits can corrupt load. Mitigation: always use
+        menu 9/0 to save; load failure falls back to sample data on startup with a console message.
+    11.4 CSV parsing edge cases
+        Special regex characters in delimiters broke equipped-item load (fixed: Pattern.quote in parseIntList).
+        Risk remains if new delimiters are added without literal splitting.
+    11.5 AI-generated code quality
+        AI may over-scope changes or miss integration (e.g. Main wiring). Mitigation: scoped prompts,
+        manual compile/run after each stage, Testing Agent review before submission.
+    11.6 Scope creep
+        Console-only IMS without GUI or network is sufficient for coursework; avoid adding unrequested features
+        close to deadline.
+
+## 12. Final Reflection
+    12.1 Project outcome
+        Delivered a working console IMS covering §2.1–2.8: query, statistics, rankings, CRUD with role
+        permissions, login/logout, and file persistence. Code lives under src/; AI process documented in ai/.
+    12.2 What went well
+        Layered design (model / service / util) kept Main readable; DataInitializer gives repeatable demo
+        data; manual test-class.md gives traceable evidence for each menu function.
+    12.3 What was challenging
+        Wiring many services into Main; ensuring save/load round-trip preserves linked data; reviewing delete
+        cascades and CSV encoding/decoding consistency.
+    12.4 Bugs found and fixed
+        CsvUtil.parseIntList treated "." as regex, causing empty equipped items after load (fixed in c26ea89).
+        GameDataManager.removeHero cascade was verified correct during review.
+    12.5 Remaining limitations
+        No removeAdmin; README and ai/reflection.md still to fill; Admin/Player ID 1 collision; load clears
+        session; only 10 sample match records.
+    12.6 Personal reflection
+        Complete the questionnaire in ai/reflection.md (tools used, useful prompts, self vs AI contribution,
+        Java concepts learned). Export Git history and prepare demo script from docs/test-class.md.
