@@ -176,3 +176,18 @@
     missing save file; saveFileExists() helper.
 ### My Decision
     Accepted FileStorageService.java; save/load verified with data/save.dat output.
+
+## Prompt 13
+    Time: 2026/06/09
+    Tool/Model: VScode/DeepSeek-Coder-V2 16B
+    Agent Role: Testing / Reviewer Agent
+    Related commit: e86ef38
+### My Prompt
+    Write manual test cases for menu 7, 8, 9, 10 into test-class.md; run Main and fill actual output.
+### AI Response Summary
+    Added Test 07 (admin edit player Tom→TomUpdated), Test 08 (login/logout admin), Test 09 (saveAll to
+    data/save.dat), Test 10 (loadAll + verify TomUpdated); ran Main with input file; all Pass; noted load
+    clears login session after rebindServices.
+### My Decision
+    Accepted Test 07–10 in docs/test-class.md.
+

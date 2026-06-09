@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public final class CsvUtil {
     private CsvUtil() {
@@ -26,7 +27,7 @@ public final class CsvUtil {
         if (text == null || text.isBlank()) {
             return result;
         }
-        for (String part : text.split(delimiter)) {
+        for (String part : text.split(Pattern.quote(delimiter))) {
             if (!part.isBlank()) {
                 result.add(Integer.parseInt(part.trim()));
             }

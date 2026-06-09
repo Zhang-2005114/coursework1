@@ -51,3 +51,16 @@
     - e83728b — Implement MatchHistoryService.java
     - e4b6393 — Main menu 7 Data Management and 8 Login/Logout
     - 3611f96 — Implement FileStorageService.java
+
+
+## 3. Testing / Reviewer Agent
+
+    3.1 Main contribution:
+    Manual test documentation in docs/test-class.md for menu 7-10; review of GameDataManager delete cascade.
+
+    3.2 Human decision:
+    3.2.1 Test 07–10 (pending): data management (admin edit player), login/logout, FileStorageService
+        save/load — ran Main, filled actual output, all Pass; load resets session after rebindServices.
+   
+    3.3 Related commits:
+    - e86ef38 — Manual test cases for menu functions 7–10 in test-class.md

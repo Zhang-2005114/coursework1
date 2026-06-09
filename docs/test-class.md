@@ -41,7 +41,6 @@
     bug found, if any
         None
 
----
 
 ## Test 02 — Team Overview (menu 2)
 
@@ -78,8 +77,6 @@
 
     bug found, if any
         None
-
----
 
 ## Test 03 — Hero Details (menu 3)
 
@@ -122,7 +119,6 @@
     bug found, if any
         None
 
----
 
 ## Test 04 — Equipment Statistics (menu 4)
 
@@ -156,7 +152,6 @@
     bug found, if any
         None
 
----
 
 ## Test 05 — Match History (menu 5)
 
@@ -195,7 +190,6 @@
     bug found, if any
         None
 
----
 
 ## Test 06 — Leaderboard (menu 6)
 
@@ -224,7 +218,6 @@
     bug found, if any
         None
 
----
 
 ## Test 07 — Data Management (menu 7)
 
@@ -269,7 +262,6 @@
     bug found, if any
         None
 
----
 
 ## Test 08 — Login / Logout (menu 8)
 
@@ -304,8 +296,6 @@
     bug found, if any
         None
 
----
-
 ## Test 09 — Save (menu 9)
 
     function tested
@@ -330,7 +320,6 @@
     bug found, if any
         None
 
----
 
 ## Test 10 — Load (menu 10)
 
@@ -360,10 +349,14 @@
         Match Count: 12
         Team: Team1 (ID: 1)
 
+        Equipped Items by Hero:
+          Li Bai (ID: 1): Storm Blade (ID: 1)
+          Han Xin (ID: 2): Arcane Staff (ID: 3)
+          Liu Bang (ID: 3): Iron Helm (ID: 5)
+
     pass/fail result
         Pass
 
     bug found, if any
-        Load clears current login session (expected after rebindServices).
+        None (fixed CsvUtil.parseIntList: delimiter "." now uses Pattern.quote)
 
----
