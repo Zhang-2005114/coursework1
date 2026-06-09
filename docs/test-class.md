@@ -223,3 +223,147 @@
 
     bug found, if any
         None
+
+---
+
+## Test 07 — Data Management (menu 7)
+
+    function tested
+        Admin edit player; GameDataManager.updatePlayer via handleDataManagement;
+        AuthenticationService.requireAdmin()
+
+    input
+        8 → 2 → admin → admin123
+        7 → 3 → 1 → 1 → TomUpdated → (blank × 5, keep other fields)
+        0
+
+    expected output
+        Login successful. Welcome, admin (Admin).
+        --- Admin Data Management --- with 1 Add  2 Delete  3 Edit
+        Player updated.
+        Player lookup shows Name: TomUpdated (ID: 1)
+
+    actual output
+        Login successful. Welcome, admin (Admin).
+        Session: admin (Admin)
+
+        --- Admin Data Management ---
+        1 Add  2 Delete  3 Edit  0 Back
+        Select entity: Player
+        Name [Tom]: TomUpdated
+        (password/level/win rate/team/match count left blank)
+        Player updated.
+
+        (Verify via menu 1 → 2 → TomUpdated)
+        === Player Details ===
+        ID: 1
+        Name: TomUpdated
+        Level: 10
+        Win Rate: 45.00%
+        Match Count: 12
+        Team: Team1 (ID: 1)
+
+    pass/fail result
+        Pass
+
+    bug found, if any
+        None
+
+---
+
+## Test 08 — Login / Logout (menu 8)
+
+    function tested
+        Login by username and logout; AuthenticationService.login, logout, session display
+
+    input
+        8 → 2 → admin → admin123
+        8 → 1
+        (logout)
+
+    expected output
+        Login successful. Welcome, admin (Admin).
+        Main menu shows Session: admin (Admin)
+        User: admin has logged out.
+        Main menu shows Session: not logged in
+
+    actual output
+        Login successful. Welcome, admin (Admin).
+
+        Session: admin (Admin)
+
+        Logged in as: User information [ID: 1, name: admin, role: Admin]
+        1 Logout  0 Back
+        User: admin has logged out.
+
+        Session: not logged in
+
+    pass/fail result
+        Pass
+
+    bug found, if any
+        None
+
+---
+
+## Test 09 — Save (menu 9)
+
+    function tested
+        Persist all data to file; FileStorageService.saveAll
+
+    input
+        9
+        (fresh sample data, no existing save.dat)
+
+    expected output
+        Data saved to data/save.dat
+        File data/save.dat created with section headers [PLAYERS], [HEROES], etc.
+
+    actual output
+        Data saved to data/save.dat
+
+        (File created: data/save.dat, ~3 KB, contains [PLAYERS] section with 15 player lines)
+
+    pass/fail result
+        Pass
+
+    bug found, if any
+        None
+
+---
+
+## Test 10 — Load (menu 10)
+
+    function tested
+        Reload data from file; FileStorageService.loadAll, rebindServices
+
+    input
+        (After Test 07 save: player Tom renamed to TomUpdated)
+        10
+        1 → 2 → TomUpdated
+
+    expected output
+        Data loaded from data/save.dat
+        Player lookup finds TomUpdated with saved attributes
+
+    actual output
+        Data loaded from data/save.dat
+
+        Session: not logged in
+        (load resets login session)
+
+        === Player Details ===
+        ID: 1
+        Name: TomUpdated
+        Level: 10
+        Win Rate: 45.00%
+        Match Count: 12
+        Team: Team1 (ID: 1)
+
+    pass/fail result
+        Pass
+
+    bug found, if any
+        Load clears current login session (expected after rebindServices).
+
+---
