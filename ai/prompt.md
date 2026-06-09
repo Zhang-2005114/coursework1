@@ -146,7 +146,7 @@
     Time: 2026/06/08
     Tool/Model: VScode/DeepSeek-Coder-V2 16B
     Agent Role: Implementation Agent
-    Related commit: pending
+    Related commit: e4b6393
 ### My Prompt
     Wire Main.java menu 7 (Data Management) and 8 (Login/Logout). Admin: add/delete/edit Player, Hero,
     Equipment, Team, MatchRecord via GameDataManager; Player: edit basic profile only. Use
@@ -158,3 +158,21 @@
 ### My Decision
     Accepted Main.java menu 7 and 8; test flow: login admin/admin123 → menu 7 for CRUD; login Tom/player1 →
     menu 7 for profile edit only.
+
+## Prompt 11
+    Time: 2026/06/09
+    Tool/Model: VScode/DeepSeek-Coder-V2 16B
+    Agent Role: Implementation Agent
+    Related commit: 3611f96
+### My Prompt
+    Implement FileStorageService per plan.md: save to data/save.dat; saveAll(GameDataManager),
+    loadAll() returning GameDataManager; per-entity save/load helpers for Player, Hero, Equipment, Team,
+    MatchRecord, and Admin. Use model toCsvLine/fromCsvLine where available.
+### AI Response Summary
+    Implemented FileStorageService with DEFAULT_SAVE_PATH data/save.dat; section-based text format
+    ([PLAYERS], [HEROES], [EQUIPMENT], [TEAMS], [MATCHES], [ADMINS]); saveAll writes all sections via
+    collectXxxLines helpers; loadAll parses sections and loads equipment → heroes → players → teams → admins
+    → matches, then recalculates team stats; Admin uses id|name|password|Admin CSV lines; IOException on
+    missing save file; saveFileExists() helper.
+### My Decision
+    Accepted FileStorageService.java; save/load verified with data/save.dat output.

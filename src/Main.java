@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -7,14 +8,32 @@ public class Main {
     private static SearchService searchService;
     private static RankingService rankingService;
     private static MatchHistoryService matchHistoryService;
+    private static final FileStorageService fileStorageService = new FileStorageService();
 
     public static void main(String[] args) {
-        dataManager = DataInitializer.createDefault();
+        dataManager = initializeDataManager();
+        rebindServices();
+        run();
+    }
+
+    private static GameDataManager initializeDataManager() {
+        if (fileStorageService.saveFileExists()) {
+            try {
+                GameDataManager loaded = fileStorageService.loadAll();
+                System.out.println("Loaded data from " + fileStorageService.getSavePath());
+                return loaded;
+            } catch (IOException e) {
+                System.out.println("Failed to load save file, using sample data: " + e.getMessage());
+            }
+        }
+        return DataInitializer.createDefault();
+    }
+
+    private static void rebindServices() {
         authService = new AuthenticationService(dataManager);
         searchService = new SearchService(dataManager);
         rankingService = new RankingService(dataManager);
         matchHistoryService = new MatchHistoryService(dataManager);
-        run();
     }
 
     private static void run() {
@@ -47,7 +66,14 @@ public class Main {
                 case 8:
                     handleLogin();
                     break;
+                case 9:
+                    handleSave();
+                    break;
+                case 10:
+                    handleLoad();
+                    break;
                 case 0:
+                    handleSaveOnExit();
                     System.out.println("Goodbye.");
                     return;
                 default:
@@ -385,6 +411,36 @@ public class Main {
                 break;
             default:
                 System.out.println("Invalid choice.");
+        }
+    }
+
+    //-- 9 Save --
+    private static void handleSave() {
+        try {
+            fileStorageService.saveAll(dataManager);
+            System.out.println("Data saved to " + fileStorageService.getSavePath());
+        } catch (IOException e) {
+            System.out.println("Save failed: " + e.getMessage());
+        }
+    }
+
+    /// -- 10 Load --
+    private static void handleLoad() {
+        try {
+            dataManager = fileStorageService.loadAll();
+            rebindServices();
+            System.out.println("Data loaded from " + fileStorageService.getSavePath());
+        } catch (IOException e) {
+            System.out.println("Load failed: " + e.getMessage());
+        }
+    }
+
+    private static void handleSaveOnExit() {
+        try {
+            fileStorageService.saveAll(dataManager);
+            System.out.println("Data saved to " + fileStorageService.getSavePath());
+        } catch (IOException e) {
+            System.out.println("Save on exit failed: " + e.getMessage());
         }
     }
 
