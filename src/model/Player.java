@@ -1,3 +1,9 @@
+package model;
+
+import interfaces.Persistable;
+import interfaces.Searchable;
+import util.CsvUtil;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

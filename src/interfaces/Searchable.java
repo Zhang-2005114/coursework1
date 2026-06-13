@@ -1,3 +1,6 @@
+package interfaces;
+
+
 public interface Searchable {
     int getId();
 

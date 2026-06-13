@@ -1,3 +1,10 @@
+package model;
+
+import enums.MatchResult;
+import interfaces.Persistable;
+import interfaces.Searchable;
+import util.CsvUtil;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

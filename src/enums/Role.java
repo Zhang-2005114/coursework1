@@ -1,3 +1,7 @@
+package enums;
+
+import model.*;
+
 public enum Role {
     ADMIN("Admin"),
     PLAYER("Player");

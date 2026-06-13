@@ -1,3 +1,10 @@
+package model;
+
+import enums.EquipmentType;
+import interfaces.Persistable;
+import interfaces.Searchable;
+import util.CsvUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 

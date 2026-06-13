@@ -1,3 +1,7 @@
+package service;
+
+import model.*;
+
 public class AuthenticationService {
     private final GameDataManager dataManager;
     private Person currentUser;

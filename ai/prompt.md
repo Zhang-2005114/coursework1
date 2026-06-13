@@ -195,7 +195,7 @@
     Time: 2026/06/13
     Tool/Model: VScode/DeepSeek-Coder-V2 16B
     Agent Role: Architect Agent
-    Related commit: pending
+    Related commit: 8cb47af
 ### My Prompt
     Design a GUI architecture for the Honor of Kings IMS. Keep existing model and service layers;
     replace console Main with a Swing (or JavaFX) presentation layer. Map menu 1–10 and login

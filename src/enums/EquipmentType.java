@@ -1,3 +1,6 @@
+package enums;
+
+
 public enum EquipmentType {
     ATTACK("Attack"),
     DEFENSE("Defense"),

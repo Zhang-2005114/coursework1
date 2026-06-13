@@ -1,3 +1,6 @@
+package enums;
+
+
 public enum HeroType {
     MAGE("Mage"),
     SHOOTER("Shooter"),

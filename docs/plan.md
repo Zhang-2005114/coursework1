@@ -5,9 +5,8 @@
     1.2 User roles
         Ordinary players view personal information, heroes, achievements, and leaderboards; administrators add, delete, and modify all data.
     1.3 Development approach
-        Console interaction implemented as primary deliverable (Main.java); record the full AI-assisted
-        development process in the "ai/" folder. GUI layer (Swing) designed in docs/design.md §12 and
-        plan.md §4.4 for future implementation without changing model/service layers.
+        Console (Main.java) and Swing GUI (GuiMain.java) share model/service layers; record the full
+        AI-assisted development process in the "ai/" folder.
 
 ## 2. Requirement Analysis
     2.1 Player Lookup
@@ -81,7 +80,7 @@
         Builds the §6 initial dataset via "createSampleData()" and "loadSampleData(manager)"; links hero owners, equipment compatibility, and team stats. Called by "GameDataManager.initializeSampleData()".
     4.3.3 InputHelper
         Console input for the menu: "readString(prompt)", "readInt(prompt)" with retry on invalid integers.
-### 4.4 gui (planned — Swing)
+### 4.4 gui
     4.4.1 AppContext
         Holds GameDataManager and all six services; shared by every panel. Methods: getDataManager(),
         getAuthService(), …; reloadData() after FileStorageService.loadAll() rebinds services.
@@ -91,12 +90,12 @@
         JFrame shell: menu bar File (Save, Load, Exit), Session (Login, Logout); status bar for current user;
         sidebar buttons for features 1–6; CardLayout content area swaps feature panels.
     4.4.4 Feature panels (gui/panel/)
-        PlayerLookupPanel (§2.1), TeamOverviewPanel (§2.2), HeroDetailsPanel (§2.3),
-        EquipmentStatsPanel (§2.4), MatchHistoryPanel (§2.5), LeaderboardPanel (§2.6),
-        DataManagementPanel (§2.7), ProfileEditPanel (player profile). Each panel receives AppContext;
+        PlayerLookupPanel (2.1), TeamOverviewPanel (2.2), HeroDetailsPanel (2.3),
+        EquipmentStatsPanel (2.4), MatchHistoryPanel (2.5), LeaderboardPanel (2.6),
+        DataManagementPanel (2.7), ProfileEditPanel (player profile). Each panel receives AppContext;
         calls SearchService / RankingService / MatchHistoryService / GameDataManager; renders JTable/JTextArea.
     4.4.5 Dialogs (gui/dialog/)
-        LoginDialog (§2.8 — username/password), EntityEditDialog for admin add/edit forms.
+        LoginDialog (2.8 — username/password), EntityEditDialog for admin add/edit forms.
     4.4.6 Gui util (gui/util/)
         TableModels for ranking and match lists; MessageHelper for errors and confirm dialogs.
     4.4.7 Permission rules
@@ -178,12 +177,11 @@
     9.7 Stage 7  
         Testing/Reviewer Agent: manual tests in docs/test-class.md (Test 01–10); fixed CsvUtil.parseIntList
         delimiter bug found during save/load review (commit c26ea89).
-    9.8 Stage 8 — In progress
+    9.8 Stage 8 
         Complete README, ai/reflection.md, final Git export, and demo preparation.
-    9.9 Stage 9 — Planned (GUI)
-        Architect Agent designed Swing GUI (Prompt 14, docs/design.md §12): AppContext, MainFrame, feature
-        panels mapped to menu 1–8, File/Session menus for save/load/login; implement gui/ package without
-        modifying model or service layers; optional GuiMain entry alongside console Main.
+    9.9 Stage 9 — Done (GUI)
+        Implemented Swing GUI in src/gui/: AppContext, GuiMain, MainFrame, panels 1–8, File/Session
+        menus; reuses model/service unchanged. Run: java -cp out GuiMain.
 
 ## 10. Testing Plan
     10.1 Test scope

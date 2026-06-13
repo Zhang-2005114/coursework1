@@ -159,11 +159,11 @@
         Admin/Player share id=1 in sample data; load (menu 10) resets login session; team stat refresh after
         delete is called from Main, not inside GameDataManager.
 
-## 12. GUI Architecture (Planned — Swing)
+## 12. GUI Architecture (Swing)
     12.1 Design goal
-        Add a Swing presentation layer without modifying model/ or service/ packages. Reuse GameDataManager
-        and all six services via constructor injection; console Main.java remains the primary deliverable until
-        GUI panels are implemented. GuiMain is an alternate entry point with identical startup logic.
+        Swing presentation layer in src/gui/ without modifying model/ or service/ packages. Reuses
+        GameDataManager and all six services via AppContext. Console Main.java and GuiMain are both
+        supported entry points with identical startup logic.
     12.2 Layering
         Four layers: bootstrap (AppContext, GuiMain) → shell (MainFrame) → feature panels (gui/panel/) →
         dialogs/util (gui/dialog/, gui/util/). Services stay free of System.out; panels render JTable/JTextArea

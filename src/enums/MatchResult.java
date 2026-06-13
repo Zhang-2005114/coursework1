@@ -1,3 +1,6 @@
+package enums;
+
+
 public enum MatchResult {
     WIN("Win"),
     LOSE("Lose");

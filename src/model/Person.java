@@ -1,3 +1,7 @@
+package model;
+
+import interfaces.Authenticatable;
+
 public abstract class Person implements Authenticatable{
     private int id; // user id
     private String name;

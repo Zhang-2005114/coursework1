@@ -1,3 +1,6 @@
+package util;
+
+
 import java.util.Scanner;
 
 public final class InputHelper {
