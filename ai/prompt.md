@@ -234,3 +234,17 @@
     Accepted GUI architecture for future implementation; console version
     remains primary deliverable until GUI panels are implemented.
 
+## Prompt 15
+    Time: 2026/06/13
+    Tool/Model: VScode/DeepSeek-Coder-V2 16B
+    Agent Role: Testing / Reviewer Agent
+    Related commit: pending
+### My Prompt
+    Test the GUI and record results in docs/test-class.md (Test 11–20), ai/agent-log.md, and ai/prompt.md.
+### AI Response Summary
+    Ran headless service-path verification and manual GuiMain walkthrough for panels 1–6, Session login/logout,
+    File save/load, admin player edit, load session reset, player profile panel. Added Test 11–20 to
+    test-class.md; all Pass. Noted renamed player logs in as TomUpdated (not Tom) after Test 19.
+### My Decision
+    Accepted Test 11–20; GUI behaviour matches console Tests 01–10 for equivalent features.
+

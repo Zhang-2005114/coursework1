@@ -45,6 +45,9 @@
         model toCsvLine/fromCsvLine (Admin via id|name|password|Admin); collectXxxLines and loadXxx per entity;
         load order equipment → heroes → players → teams → admins → matches; refreshTeamStats after load;
         saveFileExists() and configurable savePath constructor.
+    2.2.8 Swing GUI (src/gui/): AppContext, GuiMain, MainFrame; panels 1–6 (lookup/team/hero/equipment/
+        match/leaderboard); DataManagementPanel (admin CRUD tabs) and ProfileEditPanel (player); LoginDialog;
+        File/Session menus for save/load/login; Java package structure added across model/service/util/enums/gui.
 
     2.3 Related commits:
     - 54af218 — Inplement enums
@@ -61,11 +64,16 @@
 ## 3. Testing / Reviewer Agent
 
     3.1 Main contribution:
-    Manual test documentation in docs/test-class.md for menu 7-10; review of GameDataManager delete cascade.
+    Manual test documentation in docs/test-class.md for menu 7-10 and GUI panels; review of GameDataManager
+    delete cascade; headless verification of GUI service paths before manual Swing walkthrough.
 
     3.2 Human decision:
-    3.2.1 Test 07–10 (pending): data management (admin edit player), login/logout, FileStorageService
-        save/load — ran Main, filled actual output, all Pass; load resets session after rebindServices.
-   
+    3.2.1 Test 07–10: data management, login/logout, save/load — ran Main, filled actual output, all Pass;
+        load resets session after rebindServices.
+    3.2.2 Test 11–20 (GUI): ran gui.GuiMain; verified panels 1–6 query output matches console Tests 01–06;
+        Session Login/Logout and File Save/Load via menu bar; admin edit player in DataManagementPanel;
+        File→Load restores data and clears session; player ProfileEditPanel after login. All Pass.
+
     3.3 Related commits:
     - e86ef38 — Manual test cases for menu functions 7–10 in test-class.md
+    - pending — GUI Test 11–20 in test-class.md

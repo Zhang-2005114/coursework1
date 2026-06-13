@@ -201,9 +201,14 @@
         Test 08 — menu 8, login and logout
         Test 09 — menu 9, save to data/save.dat
         Test 10 — menu 10, load and verify persisted data (including equipped items)
+        Test 11–16 — GUI panels 1–6 (equivalent to Tests 01–06)
+        Test 17 — GUI Session login/logout
+        Test 18 — GUI File save
+        Test 19 — GUI admin edit player (DataManagementPanel)
+        Test 20 — GUI File load + player profile edit
     10.4 Result summary
-        All Test 01–10 marked Pass after CsvUtil fix. Known non-blocking behaviour: menu 10 load resets
-        login session via rebindServices().
+        All Test 01–10 marked Pass after CsvUtil fix. All Test 11–20 (GUI) marked Pass.
+        Known non-blocking behaviour: menu 10 / File→Load load resets login session via rebindServices().
 
 ## 11. Risk Analysis
     11.1 ID collision (Admin vs Player)
