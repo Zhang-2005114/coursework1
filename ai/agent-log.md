@@ -3,15 +3,20 @@
 ## 1. Architect Agent
 
     1.1 Main contribution:  
-    Suggested the seven model classes (Person, Player, Admin, Hero, Equipment, Team, MatchRecord) with inheritance and associations; proposed five service classes mapped to plan.md features §2.1–2.8; advised use of interfaces, collections, and enums.
+    Suggested the seven model classes (Person, Player, Admin, Hero, Equipment, Team, MatchRecord) with inheritance and associations; proposed five service classes mapped to plan.md features §2.1–2.8; advised use of interfaces, collections, and enums. Proposed Swing GUI architecture: AppContext + MainFrame shell, feature panels for menu 1–8, admin CRUD tabs, File/Session menus; services unchanged.
 
     1.2 Human decision:  
     1.2.1 Accepted the seven model classes and documented fields/methods in plan.md 4.1. 
     1.2.2 Accepted five service classes and added MatchHistoryService for 2.5. Drew UML (`docs/uml.png`) and updated 5 with class variables and methods.
+    1.2.3 GUI architecture (Prompt 14): four layers — AppContext bootstrap, MainFrame shell, feature
+        panels mapped to menu 1–8, admin CRUD tabs behind requireAdmin(); reuse all services unchanged;
+        package gui/ with panel/, dialog/, util/; GuiMain as alternate entry; CardLayout + status bar
+        for session; File menu for save/load/exit.
 
     1.3 Related commits:  
     - 049f030 — model class design in plan.md  
     - 8a69cc8 — service class design in plan.md  
+    - pending — GUI architecture design
 
 
 ## 2. Implementation Agent

@@ -3,8 +3,10 @@
     1.1 Pattern
         Three-layer console application: presentation (Main), business logic (service), data (model + util).
         GameDataManager is the single in-memory repository; services receive it via constructor injection.
+        Planned Swing GUI (§12) adds a parallel presentation layer (gui/) without changing service/model code.
     1.2 Package layout (src/)
-        Main.java — menu loop and handlers
+        Main.java — menu loop and handlers (primary entry)
+        gui/ — planned Swing layer: AppContext, GuiMain, MainFrame, panel/, dialog/, util/ (see §12)
         model/ — Person, Player, Admin, Hero, Equipment, Team, MatchRecord
         service/ — GameDataManager, AuthenticationService, SearchService, RankingService,
                    MatchHistoryService, FileStorageService
@@ -124,7 +126,7 @@
     8.2 Permission rules
         requireAdmin() gates menu 7 CRUD submenu
         Player on menu 7 may only edit own name/password
-        Public menus 1–6 readable without login (per coursework console design)
+        Public menus 1–6 readable without login 
 
 ## 9. Persistence Design
     9.1 File
@@ -156,3 +158,58 @@
     11.4 Known trade-offs
         Admin/Player share id=1 in sample data; load (menu 10) resets login session; team stat refresh after
         delete is called from Main, not inside GameDataManager.
+
+## 12. GUI Architecture (Planned — Swing)
+    12.1 Design goal
+        Add a Swing presentation layer without modifying model/ or service/ packages. Reuse GameDataManager
+        and all six services via constructor injection; console Main.java remains the primary deliverable until
+        GUI panels are implemented. GuiMain is an alternate entry point with identical startup logic.
+    12.2 Layering
+        Four layers: bootstrap (AppContext, GuiMain) → shell (MainFrame) → feature panels (gui/panel/) →
+        dialogs/util (gui/dialog/, gui/util/). Services stay free of System.out; panels render JTable/JTextArea
+        from service query results instead of SearchService.display* console output.
+    12.3 Package layout (src/gui/)
+        gui/AppContext — holds GameDataManager + AuthenticationService, SearchService, RankingService,
+            MatchHistoryService, FileStorageService; reloadData() after loadAll() rebinds services (same as
+            Main.rebindServices())
+        gui/GuiMain — if data/save.dat exists loadAll(), else DataInitializer; build AppContext; open MainFrame on EDT
+        gui/MainFrame — JFrame shell (see §12.4)
+        gui/panel/ — feature panels (see §12.5)
+        gui/dialog/ — LoginDialog, EntityEditDialog for admin add/edit forms
+        gui/util/ — TableModels for ranking/match lists; MessageHelper for errors and confirm dialogs
+    12.4 MainFrame shell
+        Menu bar:
+            File — Save (FileStorageService.saveAll), Load (loadAll + context.reloadData + refresh panels), Exit (save then quit)
+            Session — Login (opens LoginDialog), Logout (AuthenticationService.logout)
+        Status bar — current user name and role, or "not logged in"
+        Navigation — sidebar buttons or tab strip for features 1–6 (always enabled)
+        Content — CardLayout area swaps the active feature panel
+        Session listener — on login/logout, enable/disable Data Management (menu 7) and admin tabs; update status bar
+    12.5 Feature panels (console menu mapping)
+        PlayerLookupPanel (1) — ID/name search → SearchService.find* + displayPlayerDetails data in table/area
+        TeamOverviewPanel (2) — SearchService displayTeamOverview
+        HeroDetailsPanel (3) — SearchService displayHeroDetails
+        EquipmentStatsPanel (4) — RankingService rankEquipment* with formula explanation text area
+        MatchHistoryPanel (5) — MatchHistoryService + SearchService for player/team recent n matches
+        LeaderboardPanel (6) — RankingService getTopPlayers* with tie-break explanation
+        DataManagementPanel (7) — JTabbedPane: Player/Hero/Equipment/Team/Match CRUD; visible only when isAdmin();
+            requireAdmin() before destructive actions; uses GameDataManager add/update/remove
+        ProfileEditPanel (7, player) — editBasicInfo (name/password only) when isPlayer() and not admin
+        LoginDialog (8) — username or ID + password → AuthenticationService.login; modal, not a permanent panel
+    12.6 Permission rules
+        Panels 1–6 — public, no login required (same as console)
+        Menu 7 / DataManagementPanel — admin tabs enabled only when AuthenticationService.isAdmin()
+        Player role — ProfileEditPanel only on menu 7; no CRUD on other entities
+        Save/Load/Exit — File menu, available without login; Load clears login session (same as console menu 10)
+    12.7 Console-to-GUI mapping
+        Main handler* methods → panel ActionListener / button handlers
+        SearchService.display* → panel builds DefaultTableModel or formatted JTextArea from returned/joined data
+        InputHelper.read* → JOptionPane, JTextField, JComboBox in dialogs
+        printMenu session line → MainFrame status bar
+    12.8 Load and refresh
+        After FileStorageService.loadAll(): AppContext.reloadData() re-instantiates services against the new
+        GameDataManager; MainFrame clears auth session, disables admin UI, and calls refresh() on visible panels
+        so tables reflect loaded data (including equipped items via fixed CsvUtil.parseIntList).
+    12.9 Implementation notes
+        SwingUtilities.invokeLater for GuiMain; keep each panel focused on one menu feature; EntityEditDialog
+        reused across admin tabs; console Main retained for coursework demo and manual test-class.md runs.

@@ -5,7 +5,9 @@
     1.2 User roles
         Ordinary players view personal information, heroes, achievements, and leaderboards; administrators add, delete, and modify all data.
     1.3 Development approach
-        Use console interaction for a complete, maintainable codebase; record the full AI-assisted development process in the "ai/" folder.
+        Console interaction implemented as primary deliverable (Main.java); record the full AI-assisted
+        development process in the "ai/" folder. GUI layer (Swing) designed in docs/design.md §12 and
+        plan.md §4.4 for future implementation without changing model/service layers.
 
 ## 2. Requirement Analysis
     2.1 Player Lookup
@@ -79,6 +81,27 @@
         Builds the §6 initial dataset via "createSampleData()" and "loadSampleData(manager)"; links hero owners, equipment compatibility, and team stats. Called by "GameDataManager.initializeSampleData()".
     4.3.3 InputHelper
         Console input for the menu: "readString(prompt)", "readInt(prompt)" with retry on invalid integers.
+### 4.4 gui (planned — Swing)
+    4.4.1 AppContext
+        Holds GameDataManager and all six services; shared by every panel. Methods: getDataManager(),
+        getAuthService(), …; reloadData() after FileStorageService.loadAll() rebinds services.
+    4.4.2 GuiMain
+        Alternate entry point: load save.dat or DataInitializer → AppContext → MainFrame.on EDT.
+    4.4.3 MainFrame
+        JFrame shell: menu bar File (Save, Load, Exit), Session (Login, Logout); status bar for current user;
+        sidebar buttons for features 1–6; CardLayout content area swaps feature panels.
+    4.4.4 Feature panels (gui/panel/)
+        PlayerLookupPanel (§2.1), TeamOverviewPanel (§2.2), HeroDetailsPanel (§2.3),
+        EquipmentStatsPanel (§2.4), MatchHistoryPanel (§2.5), LeaderboardPanel (§2.6),
+        DataManagementPanel (§2.7), ProfileEditPanel (player profile). Each panel receives AppContext;
+        calls SearchService / RankingService / MatchHistoryService / GameDataManager; renders JTable/JTextArea.
+    4.4.5 Dialogs (gui/dialog/)
+        LoginDialog (§2.8 — username/password), EntityEditDialog for admin add/edit forms.
+    4.4.6 Gui util (gui/util/)
+        TableModels for ranking and match lists; MessageHelper for errors and confirm dialogs.
+    4.4.7 Permission rules
+        Menu 7 / admin tabs enabled only when AuthenticationService.isAdmin(); player sees ProfileEditPanel only;
+        public panels 1–6 always accessible; requireAdmin() before CRUD actions.
 
 ## 5. UML Draft
     5.1 Diagram
@@ -98,11 +121,7 @@
     5.8 MatchRecord
         Variables: "id", "date", "playerId", "teamId", "opponent", "result", "pickedHeroes". Methods: "isWin()", "getResultDisplay()".
     5.9 Authenticatable (interface)
-        Used by Person. Methods: "login()", "logout()", "authenticate()".
-    5.10 Searchable (interface)
-        Methods: "getId()", "getName()", "matches(keyword)".
-    5.11 Persistable (interface)
-        Methods: "toCsvLine()"; model classes also provide "fromCsvLine()" for loading.
+        Used by Person. Methods: "login()", "logout()", "authenticate()". 
 
 ## 6. Data Design
     6.1 Teams
@@ -143,24 +162,28 @@
         Target one issue; explain cause and give a minimal fix without changing unrelated code.
 
 ## 9. Development Timeline
-    9.1 Stage 1 — Done
+    9.1 Stage 1 
         Read requirements, create the repository, write the first "plan.md".
-    9.2 Stage 2 — Done
+    9.2 Stage 2  
         Use the Architect Agent for design feedback; revise the class structure manually.
-    9.3 Stage 3 — Done
+    9.3 Stage 3 
         Implement model classes, enums, interfaces, util classes, and initial sample data.
-    9.4 Stage 4 — Done
+    9.4 Stage 4  
         Implement the menu system and search features (Main menu 1–3, SearchService).
-    9.5 Stage 5 — Done
+    9.5 Stage 5  
         Implement authentication and Admin/Player permissions (AuthenticationService, Main menu 7–8).
-    9.6 Stage 6 — Done
+    9.6 Stage 6  
         Implement persistence and ranking features (RankingService, MatchHistoryService, FileStorageService,
         Main menu 4–6, 9–10).
-    9.7 Stage 7 — Done
+    9.7 Stage 7  
         Testing/Reviewer Agent: manual tests in docs/test-class.md (Test 01–10); fixed CsvUtil.parseIntList
         delimiter bug found during save/load review (commit c26ea89).
     9.8 Stage 8 — In progress
         Complete README, ai/reflection.md, final Git export, and demo preparation.
+    9.9 Stage 9 — Planned (GUI)
+        Architect Agent designed Swing GUI (Prompt 14, docs/design.md §12): AppContext, MainFrame, feature
+        panels mapped to menu 1–8, File/Session menus for save/load/login; implement gui/ package without
+        modifying model or service layers; optional GuiMain entry alongside console Main.
 
 ## 10. Testing Plan
     10.1 Test scope
@@ -201,13 +224,13 @@
     11.5 AI-generated code quality
         AI may over-scope changes or miss integration (e.g. Main wiring). Mitigation: scoped prompts,
         manual compile/run after each stage, Testing Agent review before submission.
-    11.6 Scope creep
-        Console-only IMS without GUI or network is sufficient for coursework; avoid adding unrequested features
-        close to deadline.
+    11.6 GUI scope
+        Adding Swing panels increases UI code volume; mitigate by reusing services unchanged, one panel per
+        feature, and keeping console Main as fallback until GUI is fully tested.
 
 ## 12. Final Reflection
     12.1 Project outcome
-        Delivered a working console IMS covering §2.1–2.8: query, statistics, rankings, CRUD with role
+        Delivered a working console IMS covering 2.1–2.8: query, statistics, rankings, CRUD with role
         permissions, login/logout, and file persistence. Code lives under src/; AI process documented in ai/.
     12.2 What went well
         Layered design (model / service / util) kept Main readable; DataInitializer gives repeatable demo
@@ -219,8 +242,7 @@
         CsvUtil.parseIntList treated "." as regex, causing empty equipped items after load (fixed in c26ea89).
         GameDataManager.removeHero cascade was verified correct during review.
     12.5 Remaining limitations
-        No removeAdmin; README and ai/reflection.md still to fill; Admin/Player ID 1 collision; load clears
-        session; only 10 sample match records.
+
     12.6 Personal reflection
         Complete the questionnaire in ai/reflection.md (tools used, useful prompts, self vs AI contribution,
         Java concepts learned). Export Git history and prepare demo script from docs/test-class.md.

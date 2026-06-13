@@ -191,3 +191,46 @@
 ### My Decision
     Accepted Test 07–10 in docs/test-class.md.
 
+## Prompt 14
+    Time: 2026/06/13
+    Tool/Model: VScode/DeepSeek-Coder-V2 16B
+    Agent Role: Architect Agent
+    Related commit: pending
+### My Prompt
+    Design a GUI architecture for the Honor of Kings IMS. Keep existing model and service layers;
+    replace console Main with a Swing (or JavaFX) presentation layer. Map menu 1–10 and login
+    permissions to panels/windows. Design only — no full code.
+### AI Response Summary
+    Proposed four-layer GUI architecture reusing GameDataManager and all six services unchanged:
+
+    (1) App bootstrap — gui/AppContext holds GameDataManager + AuthenticationService, SearchService,
+        RankingService, MatchHistoryService, FileStorageService; gui/GuiMain loads save.dat or
+        DataInitializer, then opens MainFrame (same startup logic as console Main).
+
+    (2) Shell — MainFrame (JFrame): menu bar File (Save, Load, Exit), Session (Login, Logout);
+        status bar shows current user; CardLayout content area swaps feature panels; sidebar or
+        tab strip for features 1–6 (always enabled).
+
+    (3) Feature panels (src/gui/panel/) — one panel per console menu, each receives AppContext:
+        PlayerLookupPanel (1), TeamOverviewPanel (2), HeroDetailsPanel (3),
+        EquipmentStatsPanel (4), MatchHistoryPanel (5), LeaderboardPanel (6),
+        DataManagementPanel (7), LoginPanel or LoginDialog (8). Panels call existing service methods;
+        display uses JTable/JTextArea instead of System.out.
+
+    (4) Admin CRUD — DataManagementPanel with JTabbedPane (Player/Hero/Equipment/Team/Match);
+        visible only when authService.isAdmin(); Player role sees ProfileEditPanel (name/password only).
+        requireAdmin() before opening admin tabs.
+
+    (5) Permission & session — MainFrame listens to login/logout; enable/disable menu 7 and admin tabs;
+        reload panel state after menu 10 Load via context.reloadData() + rebindServices pattern.
+
+    (6) Package layout: gui/ (GuiMain, AppContext, MainFrame), gui/panel/, gui/dialog/ (LoginDialog,
+        EntityEditDialog), gui/util/ (TableModels, MessageHelper). Console Main.java retained or
+        deprecated; GuiMain as alternate entry point.
+
+    Mapping: console handler* → panel action listeners; SearchService.display* → panel render methods
+    building TableModel from service query results; no System.out in services.
+### My Decision
+    Accepted GUI architecture for future implementation; console version
+    remains primary deliverable until GUI panels are implemented.
+
